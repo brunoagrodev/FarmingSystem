@@ -1,0 +1,84 @@
+<!--CSS-->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+<style>
+    #logo{
+        width: 80px;
+        height: 50px;
+    }
+</style>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="principaladministrador.php">
+        <img src="uploads/LogoSemFundo.png" id="logo" alt="img-logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault"
+            aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true"
+                   aria-expanded="false">Usuário</a>
+                <div class="dropdown-menu" aria-labelledby="dropdown01">
+                    <a class="dropdown-item" href="../useradministrador/cadastrarUsuario.php">Cadastrar</a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0 mx-auto">
+            <div class="input-group justify-content-center">
+                <input type="text" id="searchInput" class="form-control" placeholder="Pesquisar" aria-label="Pesquisar">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-light" type="button">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+        <form class="form-inline my-2 my-lg-0" action="logout.php">
+            <button class="btn btn-danger my-2 my-sm-0" type="submit">Sair do Sistema</button>
+        </form>
+    </div>
+</nav>
+
+
+<script src="/./js/"</script>
+
+<script>
+    // Aguarda o carregamento do documento HTML
+    document.addEventListener("DOMContentLoaded", function () {
+        // Obtém o elemento de input de pesquisa
+        var campoPesquisa = document.getElementById("searchInput");
+
+        // Obtém o corpo da tabela e as linhas da tabela
+        var corpoTabela = document.querySelector("#mytable tbody");
+        var linhasTabela = corpoTabela.querySelectorAll("tr");
+
+        // Função para executar a pesquisa
+        function executarPesquisa() {
+            var termoPesquisa = campoPesquisa.value.toLowerCase();
+
+            // Itera sobre as linhas da tabela
+            for (var i = 0; i < linhasTabela.length; i++) {
+                var colunaNome = linhasTabela[i].querySelector("td:nth-child(1)");
+                var textoNome = colunaNome.textContent.toLowerCase();
+
+                if (textoNome.includes(termoPesquisa)) {
+                    linhasTabela[i].style.display = ""; // Exibe a linha
+                } else {
+                    linhasTabela[i].style.display = "none"; // Oculta a linha
+                }
+            }
+        }
+
+        // Obtém o botão de pesquisa
+        var botaoPesquisa = document.querySelector(".input-group-append button");
+
+        // Adiciona um evento de clique ao botão de pesquisa
+        botaoPesquisa.addEventListener("click", function (evento) {
+            evento.preventDefault(); // Impede o envio do formulário
+            executarPesquisa();
+        });
+    });
+</script>
