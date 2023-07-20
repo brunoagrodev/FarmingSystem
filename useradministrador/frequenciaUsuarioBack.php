@@ -18,16 +18,36 @@ include('../controller/conexaoDataBaseV2.php');
 if (isset($_POST['idUsuario'])) {
     $idUsuario = $_POST['idUsuario'];
 
+    // Query to get the latest week number and start date of the current week
+    $sqlLatestWeek = "SELECT MAX(weekNumber) AS latestWeekNumber, MAX(dataweek) AS latestStartDate FROM historico WHERE id_usuario = $idUsuario";
+    $queryLatestWeek = mysqli_query($conn, $sqlLatestWeek);
+    $latestWeekData = mysqli_fetch_assoc($queryLatestWeek);
+
+    // Calculate the new week number and start date
+    $currentWeekNumber = $latestWeekData['latestWeekNumber'] ?? 0;
+    $currentStartDate = $latestWeekData['latestStartDate'] ?? date('Y-m-d');
+
     if (isset($_POST['compareceu'])) {
-        // Insere a frequência do usuário como "Sim"
+        // Insere a frequência do usuário como "Sim" (store the string value "Sim")
         $frequencia = 'Sim';
+        // Set the value of "frequencia_value" to "60" for "Sim"
+        $frequencia_value = '60';
     } elseif (isset($_POST['naoCompareceu'])) {
-        // Insere a frequência do usuário como "Não"
+        // Insere a frequência do usuário como "Não" (store the string value "Não")
         $frequencia = 'Não';
+        // Set the value of "frequencia_value" to "0" for "Não"
+        $frequencia_value = '0';
+    }
+
+    // Check if a new week needs to be created
+    if ($currentWeekNumber == 0 || ($currentWeekNumber % 6) == 0) {
+        $currentWeekNumber++;
+        // Increment the start date to the next week's start date
+        $currentStartDate = date('Y-m-d', strtotime($currentStartDate . ' + 7 days'));
     }
 
     // Insere o registro de frequência na tabela "historico"
-    $sqlInsert = "INSERT INTO historico (id_usuario, data, frequencia) VALUES ('$idUsuario', CURDATE(), '$frequencia')";
+    $sqlInsert = "INSERT INTO historico (id_usuario, data, frequencia, frequencia_value, weekNumber, dataweek) VALUES ('$idUsuario', CURDATE(), '$frequencia', '$frequencia_value', $currentWeekNumber, '$currentStartDate')";
     $resultInsert = mysqli_query($conn, $sqlInsert);
 
     if ($resultInsert) {
